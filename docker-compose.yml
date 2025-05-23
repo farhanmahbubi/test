@@ -3,13 +3,17 @@ version: '3.8'
 services:
   app:
     build: .
-    # volumes:
-    #   - .:/var/www
+    container_name: laravel_app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www
     depends_on:
       - db
 
   nginx:
     image: nginx:alpine
+    container_name: laravel_nginx
+    restart: unless-stopped
     ports:
       - "80:80"
     volumes:
@@ -20,11 +24,13 @@ services:
 
   db:
     image: mysql:8
+    container_name: laravel_db
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laraveluser
+      MYSQL_PASSWORD: rootpassword
     volumes:
       - dbdata:/var/lib/mysql
     ports:
