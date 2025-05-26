@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = 'test-app'            // Nama image Laravel kamu
         CONTAINER_NAME = 'laravel_app'    // Nama container Laravel app
         NGINX_CONTAINER = 'laravel_nginx' // Nama container nginx
-        REPO_URL = 'https://github.com/farhanmahbubi/test.git', credentialsId: 'github-pat' // Ganti dengan repo kamu
+        REPO_URL = 'https://github.com/farhanmahbubi/test.git'// Ganti dengan repo kamu
         DOCKERHUB_CREDENTIALS = 'dockerhub-credentials' // Jika push ke Docker Hub
         DOCKERHUB_REPO = 'farhannn/test-app'
     }
