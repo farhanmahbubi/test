@@ -2,18 +2,19 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'test-app'            // Nama image Laravel kamu
-        CONTAINER_NAME = 'laravel_app'    // Nama container Laravel app
-        NGINX_CONTAINER = 'laravel_nginx' // Nama container nginx
-        REPO_URL = 'https://github.com/farhanmahbubi/test.git'// Ganti dengan repo kamu
-        DOCKERHUB_CREDENTIALS = 'dockerhub-credentials' // Jika push ke Docker Hub
+        IMAGE_NAME = 'test-app'
+        CONTAINER_NAME = 'laravel_app'
+        NGINX_CONTAINER = 'laravel_nginx'
+        REPO_URL = 'https://github.com/farhanmahbubi/test.git'
+        GIT_CREDENTIALS = 'github-pat'
+        DOCKERHUB_CREDENTIALS = 'dockerhub-credentials'
         DOCKERHUB_REPO = 'farhannn/test-app'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: env.REPO_URL, branch: 'main' // Sesuaikan branch
+                git url: env.REPO_URL, branch: 'main', credentialsId: env.GIT_CREDENTIALS
             }
         }
 
@@ -50,7 +51,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker run -d --name ${env.CONTAINER_NAME} -p 9000:9000 ${env.IMAGE_NAME}
+                    docker run -d --name ${env.CONTAINER_NAME} ${env.IMAGE_NAME}
                     """
                 }
             }
@@ -59,14 +60,11 @@ pipeline {
         stage('Reload Nginx') {
             steps {
                 script {
-                    sh """
-                    docker restart ${env.NGINX_CONTAINER}
-                    """
+                    sh "docker restart ${env.NGINX_CONTAINER}"
                 }
             }
         }
 
-        
         stage('Push to Docker Hub') {
             steps {
                 script {
@@ -76,7 +74,6 @@ pipeline {
                 }
             }
         }
-        
     }
 
     post {
